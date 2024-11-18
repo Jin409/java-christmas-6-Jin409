@@ -84,6 +84,9 @@ public class OutputView {
             return parsedDiscountedHistories;
         }
         for (DiscountedHistoryDto discountedHistoryDto : discountedHistoryDtos) {
+            if (discountedHistoryDto.discountedAmount() == 0) {
+                continue;
+            }
             parsedDiscountedHistories.add(
                     discountedHistoryDto.name() + ": -" + String.format("%,d", discountedHistoryDto.discountedAmount())
                             + "원");
