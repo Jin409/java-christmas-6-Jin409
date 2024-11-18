@@ -34,7 +34,7 @@ public enum OfferEvent {
     public static boolean isInProgress(int visitDate) {
         boolean isInProgress = false;
         for (OfferEvent offerEvent : OfferEvent.values()) {
-            if (visitDate > offerEvent.startDate && visitDate < offerEvent.endDate) {
+            if (visitDate >= offerEvent.startDate && visitDate <= offerEvent.endDate) {
                 isInProgress = true;
             }
         }
