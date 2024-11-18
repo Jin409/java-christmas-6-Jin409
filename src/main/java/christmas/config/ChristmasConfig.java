@@ -19,11 +19,11 @@ public class ChristmasConfig {
         return new OrderService(menuRepository());
     }
 
-    public BillsService eventService() {
+    public BillsService billsService() {
         return new BillsService();
     }
 
     public ChristmasController christmasController() {
-        return new ChristmasController(menuService(), orderService(), eventService());
+        return new ChristmasController(menuService(), orderService(), billsService());
     }
 }

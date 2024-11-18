@@ -13,7 +13,13 @@ import java.util.List;
 
 public class BillsService {
 
+    private static final long EVENT_APPLICABLE_BOUNDARY = 10_000;
+
     public Bills getBills(final Orders orders) {
+        if (orders.getOriginPrice() < EVENT_APPLICABLE_BOUNDARY) {
+            return new Bills(orders, null, null);
+        }
+
         OfferedMenu offeredMenu = null;
         List<DiscountedHistory> discountedHistories = getDiscountedHistory(orders, orders.getVisitDate());
         return new Bills(orders, offeredMenu, discountedHistories);
