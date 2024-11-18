@@ -1,6 +1,6 @@
 package christmas.config;
 
-import christmas.ChristmasController;
+import christmas.controller.ChristmasController;
 import christmas.model.MenuRepository;
 import christmas.service.MenuService;
 

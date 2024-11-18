@@ -1,7 +1,5 @@
 package christmas.model;
 
-import christmas.Category;
-
 public class Menu {
     private final String name;
     private final long price;

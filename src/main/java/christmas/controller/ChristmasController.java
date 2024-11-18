@@ -1,5 +1,7 @@
-package christmas;
+package christmas.controller;
 
+import christmas.handler.InputHandler;
+import christmas.model.Category;
 import christmas.model.Menu;
 import christmas.service.MenuService;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ public class ChristmasController {
 
     public void run() {
         readyToOpen();
+        int visitDate = InputHandler.getVisitDate();
     }
 
     private void readyToOpen() {
