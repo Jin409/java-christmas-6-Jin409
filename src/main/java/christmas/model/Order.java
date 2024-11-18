@@ -20,4 +20,8 @@ public class Order {
     public long getOrderedPrice() {
         return menu.getPrice() * quantity;
     }
+
+    public String getNameOfMenu() {
+        return menu.getName();
+    }
 }

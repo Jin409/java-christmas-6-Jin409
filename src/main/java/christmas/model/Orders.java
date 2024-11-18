@@ -19,6 +19,10 @@ public class Orders {
         return visitDate;
     }
 
+    public List<Order> getOrders() {
+        return List.copyOf(orders);
+    }
+
     private void validate(List<Order> orders) {
         if (orders.size() > VALID_SIZE) {
             throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");

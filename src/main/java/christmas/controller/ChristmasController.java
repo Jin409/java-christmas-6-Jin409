@@ -1,5 +1,6 @@
 package christmas.controller;
 
+import christmas.dto.BillsResponseDto;
 import christmas.dto.OrderRequestDto;
 import christmas.handler.ErrorHandler;
 import christmas.handler.InputHandler;
@@ -10,6 +11,7 @@ import christmas.model.Orders;
 import christmas.service.BillsService;
 import christmas.service.MenuService;
 import christmas.service.OrderService;
+import christmas.view.OutputView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -33,6 +35,8 @@ public class ChristmasController {
 
         Orders orders = orderService.saveOrders(orderRequestDtos, visitDate);
         Bills bills = billsService.getBills(orders);
+        BillsResponseDto billsResponseDto = billsService.getBillsResponseDto(bills);
+        OutputView.displayBills(billsResponseDto);
     }
 
     private <T> T retryOnInvalidInput(Supplier<T> inputSupplier) {
