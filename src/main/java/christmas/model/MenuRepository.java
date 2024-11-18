@@ -14,10 +14,9 @@ public class MenuRepository {
         menus.add(menu);
     }
 
-    public boolean isExist(String comparedName) {
-        Optional<Menu> foundMenu = menus.stream()
+    public Optional<Menu> findByName(String comparedName) {
+        return menus.stream()
                 .filter(menu -> menu.getName().equals(comparedName))
                 .findAny();
-        return foundMenu.isPresent();
     }
 }

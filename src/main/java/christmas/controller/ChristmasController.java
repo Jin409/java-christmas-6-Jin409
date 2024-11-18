@@ -6,15 +6,18 @@ import christmas.handler.InputHandler;
 import christmas.model.Category;
 import christmas.model.Menu;
 import christmas.service.MenuService;
+import christmas.service.OrderService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 public class ChristmasController {
     private final MenuService menuService;
+    private final OrderService orderService;
 
-    public ChristmasController(MenuService menuService) {
+    public ChristmasController(MenuService menuService, OrderService orderService) {
         this.menuService = menuService;
+        this.orderService = orderService;
     }
 
     public void run() {
@@ -23,7 +26,7 @@ public class ChristmasController {
         int visitDate = retryOnInvalidInput(InputHandler::getVisitDate);
         List<OrderRequestDto> orderRequestDtos = retryOnInvalidInput(InputHandler::getOrders);
 
-        menuService.validateOrders(orderRequestDtos);
+        orderService.saveOrders(orderRequestDtos, visitDate);
     }
 
     private <T> T retryOnInvalidInput(Supplier<T> inputSupplier) {
