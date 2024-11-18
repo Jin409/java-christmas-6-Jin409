@@ -8,12 +8,13 @@ public record BillsResponseDto(
         List<OfferedMenuDto> offeredMenuDtos,
         List<DiscountedHistoryDto> discountedHistoryDtos,
         long totalDiscountedAmount,
-        long totalDiscountedPrice
+        long totalDiscountedPrice,
+        BadgeResponseDto badgeResponseDto
 ) {
     public static BillsResponseDto from(List<OrderedMenuDto> orderedMenus, long originPrice,
                                         List<OfferedMenuDto> offeredMenuDtos,
-
-                                        List<DiscountedHistoryDto> discountedHistoryDtos) {
+                                        List<DiscountedHistoryDto> discountedHistoryDtos,
+                                        BadgeResponseDto badgeResponseDto) {
         long totalDiscountedAmount = 0;
         if (discountedHistoryDtos != null) {
             totalDiscountedAmount = discountedHistoryDtos.stream()
@@ -23,7 +24,7 @@ public record BillsResponseDto(
         long totalDiscountedPrice = originPrice - totalDiscountedAmount;
 
         return new BillsResponseDto(orderedMenus, originPrice, offeredMenuDtos, discountedHistoryDtos,
-                totalDiscountedAmount, totalDiscountedPrice);
+                totalDiscountedAmount, totalDiscountedPrice, badgeResponseDto);
     }
 
     public record OrderedMenuDto(
@@ -44,4 +45,9 @@ public record BillsResponseDto(
     ) {
     }
 
+    public record BadgeResponseDto(
+            String name
+    ) {
+
+    }
 }

@@ -4,17 +4,23 @@ import java.util.List;
 
 public class Bills {
     private final Orders orders;
-    // 할인 전 총주문 금액은 orders 에서 가져오기
     private final List<OfferedMenu> offeredMenus;
     private final List<DiscountedHistory> discountedHistories;
-    // 총혜택금액은 discountedHistories 의 합으로
-    // 할인 후 예상 결제 금액도 discountedHistories 의 합으로
+    private final Badge badge;
 
-
-    public Bills(Orders orders, List<OfferedMenu> offeredMenus, List<DiscountedHistory> discountedHistories) {
+    public Bills(Orders orders, List<OfferedMenu> offeredMenus, List<DiscountedHistory> discountedHistories,
+                 Badge badge) {
         this.orders = orders;
         this.offeredMenus = offeredMenus;
         this.discountedHistories = discountedHistories;
+        this.badge = badge;
+    }
+
+    public String getNameOfBadge() {
+        if (badge == null) {
+            return null;
+        }
+        return this.badge.name();
     }
 
     public List<OfferedMenu> getOfferedMenus() {

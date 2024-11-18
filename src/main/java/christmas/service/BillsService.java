@@ -1,14 +1,17 @@
 package christmas.service;
 
 import christmas.dto.BillsResponseDto;
+import christmas.dto.BillsResponseDto.BadgeResponseDto;
 import christmas.dto.BillsResponseDto.DiscountedHistoryDto;
 import christmas.dto.BillsResponseDto.OfferedMenuDto;
 import christmas.dto.BillsResponseDto.OrderedMenuDto;
+import christmas.model.Badge;
 import christmas.model.Bills;
 import christmas.model.Bills.DiscountedHistory;
 import christmas.model.Bills.OfferedMenu;
 import christmas.model.Menu;
 import christmas.model.MenuCategory;
+import christmas.model.MenuRepository;
 import christmas.model.Order;
 import christmas.model.Orders;
 import christmas.model.event.DayRelatedEvent;
@@ -22,13 +25,21 @@ public class BillsService {
 
     private static final long EVENT_APPLICABLE_BOUNDARY = 10_000;
 
+    private final MenuRepository menuRepository;
+
+    public BillsService(MenuRepository menuRepository) {
+        this.menuRepository = menuRepository;
+    }
+
     public BillsResponseDto getBillsResponseDto(Bills bills) {
         Orders orders = bills.getOrders();
         List<OrderedMenuDto> orderedMenuDtos = getOrderedMenuDtos(orders.getOrders());
         List<OfferedMenuDto> offeredMenuDtos = getOfferedMenuDtos(bills.getOfferedMenus());
         List<DiscountedHistoryDto> discountedHistoryDtos = getDiscountedHistoryDtos(bills.getDiscountedHistories());
+        BadgeResponseDto badgeResponseDto = new BadgeResponseDto(bills.getNameOfBadge());
 
-        return BillsResponseDto.from(orderedMenuDtos, orders.getOriginPrice(), offeredMenuDtos, discountedHistoryDtos);
+        return BillsResponseDto.from(orderedMenuDtos, orders.getOriginPrice(), offeredMenuDtos, discountedHistoryDtos,
+                badgeResponseDto);
     }
 
     private List<OfferedMenuDto> getOfferedMenuDtos(List<OfferedMenu> offeredMenus) {
@@ -55,20 +66,38 @@ public class BillsService {
     }
 
     public Bills getBills(final Orders orders) {
+        int visitDate = orders.getVisitDate();
+
         if (orders.getOriginPrice() < EVENT_APPLICABLE_BOUNDARY) {
-            return new Bills(orders, null, null);
+            return new Bills(orders, null, null, null);
         }
 
-        List<DiscountedHistory> discountedHistories = getDiscountedHistory(orders, orders.getVisitDate());
+        List<DiscountedHistory> discountedHistories = getDiscountedHistory(orders, visitDate);
 
         List<OfferedMenu> offeredMenus = null;
+        return new Bills(orders, getOfferedMenus(visitDate, orders.getOriginPrice()), discountedHistories,
+                findBadge(getTotalDiscountedAmount(discountedHistories)));
+    }
 
-        // TODO: 여기 고치기
-        if (applyOfferEvent(orders.getVisitDate(), orders.getOriginPrice()).getDiscountedAmount() > 0) {
-            offeredMenus = List.of(new OfferedMenu(new Menu("샴페인", 25_000, MenuCategory.DRINK), 1));
+    private long getTotalDiscountedAmount(List<DiscountedHistory> discountedHistories) {
+        return discountedHistories.stream().mapToLong(DiscountedHistory::getDiscountedAmount).sum();
+    }
+
+    private List<OfferedMenu> getOfferedMenus(int visitDate, long originPrice) {
+        if (OfferEvent.isInProgress(visitDate)) {
+            OfferEvent appliedEvent = OfferEvent.getAppliedEvent(visitDate, originPrice);
+            return List.of(new OfferedMenu(findMenuWithName(appliedEvent.getMenuName()), 1));
         }
+        return null;
+    }
 
-        return new Bills(orders, offeredMenus, discountedHistories);
+    private Menu findMenuWithName(String name) {
+        return menuRepository.findByName(name)
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당 상품이 존재하지 않습니다."));
+    }
+
+    private Badge findBadge(long totalDiscountedAmount) {
+        return Badge.findByDiscountedAmount(totalDiscountedAmount);
     }
 
     private List<DiscountedHistory> getDiscountedHistory(final Orders orders, final int visitDate) {
@@ -110,8 +139,8 @@ public class BillsService {
     private Bills.DiscountedHistory applyOfferEvent(int visitDate, long originPrice) {
         long discountedAmount = 0;
         if (OfferEvent.isInProgress(visitDate)) {
-            OfferEvent appliedEvent = OfferEvent.getAppliedEvent(visitDate);
-            discountedAmount = appliedEvent.getDiscountedAmount(visitDate, originPrice);
+            OfferEvent appliedEvent = OfferEvent.getAppliedEvent(visitDate, originPrice);
+            discountedAmount = appliedEvent.getDiscountedAmount();
             return new Bills.DiscountedHistory(appliedEvent.getName(), discountedAmount);
         }
         return null;

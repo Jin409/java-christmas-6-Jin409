@@ -1,6 +1,7 @@
 package christmas.view;
 
 import christmas.dto.BillsResponseDto;
+import christmas.dto.BillsResponseDto.BadgeResponseDto;
 import christmas.dto.BillsResponseDto.DiscountedHistoryDto;
 import christmas.dto.BillsResponseDto.OfferedMenuDto;
 import christmas.dto.BillsResponseDto.OrderedMenuDto;
@@ -36,6 +37,16 @@ public class OutputView {
 
         System.out.println("<할인 후 예상 결제 금액>");
         System.out.println(parseTotalDiscountedPrice(billsResponseDto.totalDiscountedPrice()));
+
+        System.out.println("<12월 이벤트 배지>");
+        System.out.println(parseBadgeInformation(billsResponseDto.badgeResponseDto()));
+    }
+
+    private static String parseBadgeInformation(BadgeResponseDto badgeResponseDto) {
+        if (badgeResponseDto == null) {
+            return "없음";
+        }
+        return badgeResponseDto.name();
     }
 
     private static String parseTotalDiscountedPrice(long totalDiscountedPrice) {
