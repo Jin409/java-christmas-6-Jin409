@@ -27,7 +27,7 @@ public class Bills {
         }
     }
 
-    public class DiscountedHistory {
+    public static class DiscountedHistory {
         private final String eventName;
         private final long discountedAmount;
 

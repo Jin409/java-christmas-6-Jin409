@@ -3,6 +3,7 @@ package christmas.controller;
 import christmas.dto.OrderRequestDto;
 import christmas.handler.ErrorHandler;
 import christmas.handler.InputHandler;
+import christmas.model.Bills;
 import christmas.model.MenuCategory;
 import christmas.model.Menu;
 import christmas.model.Orders;
@@ -31,7 +32,7 @@ public class ChristmasController {
         List<OrderRequestDto> orderRequestDtos = retryOnInvalidInput(InputHandler::getOrders);
 
         Orders orders = orderService.saveOrders(orderRequestDtos, visitDate);
-
+        Bills bills = billsService.getBills(orders);
     }
 
     private <T> T retryOnInvalidInput(Supplier<T> inputSupplier) {

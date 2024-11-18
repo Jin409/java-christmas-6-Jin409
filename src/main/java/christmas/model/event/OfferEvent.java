@@ -1,17 +1,21 @@
 package christmas.model.event;
 
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 public enum OfferEvent {
-    CHAMPAGNE_OFFER(1, 31, originPrice -> originPrice > 120_000, 25_000, "샴페인");
+    CHAMPAGNE_OFFER("증정 이벤트", 1, 31, originPrice -> originPrice > 120_000, 25_000, "샴페인");
 
+    private final String name;
     private final int startDate;
     private final int endDate;
     private final Predicate<Long> isApplicable;
     private final long discountedAmount;
     private final String menuName;
 
-    OfferEvent(int startDate, int endDate, Predicate<Long> isApplicable, long discountedAmount, String menuName) {
+    OfferEvent(String name, int startDate, int endDate, Predicate<Long> isApplicable, long discountedAmount,
+               String menuName) {
+        this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.isApplicable = isApplicable;
@@ -19,7 +23,26 @@ public enum OfferEvent {
         this.menuName = menuName;
     }
 
-    public static long getDiscountedAmount(int visitDate, long originPrice) {
+    public String getName() {
+        return name;
+    }
+
+    public static boolean isInProgress(int visitDate) {
+        boolean isInProgress = false;
+        for (OfferEvent offerEvent : OfferEvent.values()) {
+            if (visitDate > offerEvent.startDate && visitDate < offerEvent.endDate) {
+                isInProgress = true;
+            }
+        }
+        return isInProgress;
+    }
+
+    public static OfferEvent getAppliedEvent(int visitDate) {
+        return Arrays.stream(OfferEvent.values())
+                .filter(event -> event.startDate <= visitDate && event.endDate >= visitDate).findAny().orElseThrow();
+    }
+
+    public long getDiscountedAmount(int visitDate, long originPrice) {
         long discountedAmount = 0;
 
         for (OfferEvent offerEvent : OfferEvent.values()) {
