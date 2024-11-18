@@ -34,7 +34,7 @@ public enum DayRelatedEvent {
     public static boolean isInProgress(int visitDate) {
         boolean isInProgress = false;
         for (DayRelatedEvent dayRelatedEvent : DayRelatedEvent.values()) {
-            if (visitDate > dayRelatedEvent.startDate && visitDate < dayRelatedEvent.endDate) {
+            if (visitDate >= dayRelatedEvent.startDate && visitDate <= dayRelatedEvent.endDate) {
                 isInProgress = true;
             }
         }
