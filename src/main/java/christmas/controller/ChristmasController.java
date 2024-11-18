@@ -8,7 +8,7 @@ import christmas.model.Menu;
 import christmas.service.MenuService;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.Order;
+import java.util.function.Supplier;
 
 public class ChristmasController {
     private final MenuService menuService;
@@ -19,14 +19,17 @@ public class ChristmasController {
 
     public void run() {
         readyToOpen();
-        get();
+
+        int visitDate = retryOnInvalidInput(InputHandler::getVisitDate);
+        List<OrderRequestDto> orderRequestDtos = retryOnInvalidInput(InputHandler::getOrders);
+
+        menuService.validateOrders(orderRequestDtos);
     }
 
-    private void get() {
+    private <T> T retryOnInvalidInput(Supplier<T> inputSupplier) {
         while (true) {
             try {
-                int visitDate = InputHandler.getVisitDate();
-                List<OrderRequestDto> orderRequestDtos = InputHandler.getOrders();
+                return inputSupplier.get();
             } catch (IllegalArgumentException e) {
                 ErrorHandler.handle(e);
             }
