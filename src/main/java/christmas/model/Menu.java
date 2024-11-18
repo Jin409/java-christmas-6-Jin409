@@ -11,6 +11,10 @@ public class Menu {
         this.menuCategory = menuCategory;
     }
 
+    public long getPrice() {
+        return price;
+    }
+
     public String getName() {
         return name;
     }

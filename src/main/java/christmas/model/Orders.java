@@ -15,6 +15,10 @@ public class Orders {
         this.orders = orders;
     }
 
+    public int getVisitDate() {
+        return visitDate;
+    }
+
     private void validate(List<Order> orders) {
         if (orders.size() > VALID_SIZE) {
             throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
@@ -44,5 +48,9 @@ public class Orders {
             }
         }
         return quantity;
+    }
+
+    public long getOriginPrice() {
+        return orders.stream().mapToLong(order -> order.getOrderedPrice()).sum();
     }
 }

@@ -16,4 +16,8 @@ public class Order {
     public boolean doesOrderBelongTo(MenuCategory category) {
         return menu.doesMenuBelongTo(category);
     }
+
+    public long getOrderedPrice() {
+        return menu.getPrice() * quantity;
+    }
 }

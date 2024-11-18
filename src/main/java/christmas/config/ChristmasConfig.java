@@ -2,7 +2,7 @@ package christmas.config;
 
 import christmas.controller.ChristmasController;
 import christmas.model.MenuRepository;
-import christmas.model.Orders;
+import christmas.service.BillsService;
 import christmas.service.MenuService;
 import christmas.service.OrderService;
 
@@ -19,7 +19,11 @@ public class ChristmasConfig {
         return new OrderService(menuRepository());
     }
 
+    public BillsService eventService() {
+        return new BillsService();
+    }
+
     public ChristmasController christmasController() {
-        return new ChristmasController(menuService(), orderService());
+        return new ChristmasController(menuService(), orderService(), eventService());
     }
 }
