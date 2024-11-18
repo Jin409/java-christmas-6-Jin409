@@ -2,7 +2,7 @@ package christmas.model;
 
 import java.util.Arrays;
 
-public enum Category {
+public enum MenuCategory {
     DESSERT("디저트"),
     MAIN("메인"),
     APPETIZER("에피타이저"),
@@ -10,13 +10,13 @@ public enum Category {
 
     private final String value;
 
-    Category(String value) {
+    MenuCategory(String value) {
         this.value = value;
     }
 
-    public static Category findByValue(final String comparedValue) {
-        return Arrays.stream(Category.values())
-                .filter(category -> category.value.equals(comparedValue))
+    public static MenuCategory findByValue(final String comparedValue) {
+        return Arrays.stream(MenuCategory.values())
+                .filter(menuCategory -> menuCategory.value.equals(comparedValue))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 카테고리입니다."));
     }

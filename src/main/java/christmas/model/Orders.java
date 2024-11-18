@@ -10,4 +10,14 @@ public class Orders {
         this.visitDate = visitDate;
         this.orders = orders;
     }
+
+    public long getQuantityOf(MenuCategory applicableCategory) {
+        long quantity = 0;
+        for (Order order : orders) {
+            if (order.doesOrderBelongTo(applicableCategory)) {
+                quantity += order.getQuantity();
+            }
+        }
+        return quantity;
+    }
 }

@@ -8,4 +8,12 @@ public class Order {
         this.menu = menu;
         this.quantity = quantity;
     }
+
+    public long getQuantity() {
+        return quantity;
+    }
+
+    public boolean doesOrderBelongTo(MenuCategory category) {
+        return menu.doesMenuBelongTo(category);
+    }
 }
