@@ -20,7 +20,7 @@ public class ChristmasConfig {
     }
 
     public BillsService billsService() {
-        return new BillsService();
+        return new BillsService(menuRepository());
     }
 
     public ChristmasController christmasController() {

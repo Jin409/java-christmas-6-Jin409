@@ -27,6 +27,10 @@ public enum OfferEvent {
         return name;
     }
 
+    public String getMenuName() {
+        return menuName;
+    }
+
     public static boolean isInProgress(int visitDate) {
         boolean isInProgress = false;
         for (OfferEvent offerEvent : OfferEvent.values()) {
@@ -37,20 +41,13 @@ public enum OfferEvent {
         return isInProgress;
     }
 
-    public static OfferEvent getAppliedEvent(int visitDate) {
+    public static OfferEvent getAppliedEvent(int visitDate, long originPrice) {
         return Arrays.stream(OfferEvent.values())
-                .filter(event -> event.startDate <= visitDate && event.endDate >= visitDate).findAny().orElseThrow();
+                .filter(event -> event.startDate <= visitDate && event.endDate >= visitDate && event.isApplicable.test(
+                        originPrice)).findAny().orElseThrow();
     }
 
-    public long getDiscountedAmount(int visitDate, long originPrice) {
-        long discountedAmount = 0;
-
-        for (OfferEvent offerEvent : OfferEvent.values()) {
-            if (visitDate > offerEvent.startDate && visitDate < offerEvent.endDate && offerEvent.isApplicable.test(
-                    originPrice)) {
-                discountedAmount += offerEvent.discountedAmount;
-            }
-        }
+    public long getDiscountedAmount() {
         return discountedAmount;
     }
 
