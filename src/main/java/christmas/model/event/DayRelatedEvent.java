@@ -1,5 +1,7 @@
-package christmas.model;
+package christmas.model.event;
 
+import christmas.model.MenuCategory;
+import christmas.model.Orders;
 import java.util.Arrays;
 import java.util.function.Predicate;
 

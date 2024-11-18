@@ -1,10 +1,9 @@
-package christmas.model;
+package christmas.model.event;
 
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public enum DdayEvent {
-    D_DAY(1, 25, (visitDate) -> (long) ((visitDate - 1) * 100L + 1_000));
+    CHRISTMAS_D_DAY(1, 25, (visitDate) -> (long) ((visitDate - 1) * 100L + 1_000));
 
     private final int startDate;
     private final int endDate;
