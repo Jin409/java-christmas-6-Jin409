@@ -1,11 +1,14 @@
 package christmas.controller;
 
+import christmas.dto.OrderRequestDto;
+import christmas.handler.ErrorHandler;
 import christmas.handler.InputHandler;
 import christmas.model.Category;
 import christmas.model.Menu;
 import christmas.service.MenuService;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.Order;
 
 public class ChristmasController {
     private final MenuService menuService;
@@ -16,7 +19,18 @@ public class ChristmasController {
 
     public void run() {
         readyToOpen();
-        int visitDate = InputHandler.getVisitDate();
+        get();
+    }
+
+    private void get() {
+        while (true) {
+            try {
+                int visitDate = InputHandler.getVisitDate();
+                List<OrderRequestDto> orderRequestDtos = InputHandler.getOrders();
+            } catch (IllegalArgumentException e) {
+                ErrorHandler.handle(e);
+            }
+        }
     }
 
     private void readyToOpen() {
