@@ -1,7 +1,10 @@
 package christmas.view;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class InputValidator {
     private static final String REGEX_OF_INTEGER = "\\d+";
@@ -30,6 +33,21 @@ public class InputValidator {
 
         List<String> orders = Arrays.asList(rawOrders.split(Constants.DELIMITER_OF_ORDER));
         orders.forEach(InputValidator::validateSingleOrder);
+
+        hasDuplicatedMenu(orders);
+    }
+
+    public static void hasDuplicatedMenu(List<String> orders) {
+        Set<String> menuName = new HashSet<>();
+
+        for (String order : orders) {
+            String[] splitOrder = order.split(Constants.DELIMITER_OF_MENU);
+            menuName.add(splitOrder[0]);
+        }
+
+        if (orders.size() != menuName.size()) {
+            throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+        }
     }
 
     private static void validateSingleOrder(String order) {
@@ -53,6 +71,6 @@ public class InputValidator {
     }
 
     private static boolean hasInvalidQuantityRange(int quantity) {
-        return quantity < 0;
+        return quantity < 1;
     }
 }
